@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="all">
+        <item android:id="@+id/mute_video" android:title="Mute Video" />
+        <item android:id="@+id/mute_audio" android:title="Mute Audio" />
+        </group>
+    <group android:checkableBehavior="all">
+        <item android:id="@+id/record_video" android:title="Record Video" />
+        <item android:id="@+id/record_audio" android:title="Record Audio" />
+    </group>
+</menu>

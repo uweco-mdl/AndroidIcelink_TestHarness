@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="compile">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/fm.icelink.jar"/>
+		<pathelement location="lib/fm.icelink.java.jar"/>
+        <pathelement location="lib/fm.icelink.java.sarxos.jar"/>
+        <pathelement location="lib/fm.icelink.openh264.jar"/>
+        <pathelement location="lib/fm.icelink.opus.jar"/>
+        <pathelement location="lib/fm.icelink.vpx.jar"/>
+        <pathelement location="lib/fm.icelink.yuv.jar"/>
+        <pathelement location="lib/fm.icelink.websync4.jar"/>
+        <pathelement location="lib/fm.jar"/>
+        <pathelement location="lib/fm.websync.jar"/>
+        <pathelement location="lib/fm.websync.subscribers.jar"/>
+        <pathelement location="lib/fm.websync.chat.jar"/>
+    </path>
+    <target name="init">
+        <delete dir="bin"/>
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="build" depends="init">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+    <target name="compile">
+        <antcall target="build"/>
+    </target>
+</project>
