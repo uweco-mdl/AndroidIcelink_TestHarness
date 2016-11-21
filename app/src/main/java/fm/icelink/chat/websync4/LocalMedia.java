@@ -18,11 +18,13 @@ public class LocalMedia extends fm.icelink.RtcLocalMedia<View> {
 
     @Override
     protected AudioSink createAudioRecorder(AudioFormat audioFormat) {
+        android.util.Log.w("--ICELINK LIB--","\n------- About to CREATE AUDIO RECORDER [LocalMedia.java]...");
         return new fm.icelink.matroska.AudioSink(getId() + "-local-audio-" + audioFormat.getName().toLowerCase() + ".mkv");
     }
 
     @Override
     protected VideoSink createVideoRecorder(VideoFormat videoFormat) {
+        android.util.Log.w("--ICELINK LIB--","\n------- About to CREATE VIDEO RECORDER [LocalMedia.java]...");
         return new fm.icelink.matroska.VideoSink(getId() + "-local-video-" + videoFormat.getName().toLowerCase() + ".mkv");
     }
 
@@ -38,6 +40,7 @@ public class LocalMedia extends fm.icelink.RtcLocalMedia<View> {
 
     @Override
     protected AudioSource createAudioSource(AudioConfig audioConfig) {
+        android.util.Log.w("--ICELINK LIB--","\n------- About to CREATE AUDIO RECORD SOURCE [LocalMedia.java]...");
         return new AudioRecordSource(context, audioConfig);
     }
 

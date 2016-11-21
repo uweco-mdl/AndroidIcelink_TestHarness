@@ -21,11 +21,14 @@ public class RemoteMedia extends fm.icelink.RtcRemoteMedia<FrameLayout> {
 
     @Override
     protected AudioSink createAudioRecorder(AudioFormat audioFormat) {
+
+        android.util.Log.w("--ICELINK LIB--","\n------- About to create AudioRecorder [RemoteMedia.java]...");
         return new fm.icelink.matroska.AudioSink(getId() + "-remote-audio-" + audioFormat.getName().toLowerCase() + ".mkv");
     }
 
     @Override
     protected VideoSink createVideoRecorder(VideoFormat videoFormat) {
+        android.util.Log.w("--ICELINK LIB--","\n------- About to create Video Recorder [RemoteMedia]...");
         return new fm.icelink.matroska.VideoSink(getId() + "-remote-video-" + videoFormat.getName().toLowerCase() + ".mkv");
     }
 

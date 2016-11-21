@@ -88,6 +88,7 @@ public class App {
     public static String TURN_user = default_TURNuser;
     public static String TURN_passwd = default_TURNpassword;
 
+    public static String ProviderName = "";     // this will be set by the caller
     public static final String default_username = "DummyUser";
 
     private IceServer[] iceServers;
@@ -164,7 +165,7 @@ public class App {
                     final String libraryPath = context.getFilesDir() + "/libopenh264.so";
                     if (!new FileStream(libraryPath).exists()) {
                         String downloadUrl = fm.icelink.openh264.Utility.getDownloadUrl();
-                        Log.info(String.format("OpenH264 library missing. Downloading now from: %s.", downloadUrl));
+                        Log.warn(String.format("OpenH264 library missing. Downloading now from: %s.", downloadUrl));
                         return HttpFileTransfer.downloadFile(downloadUrl, libraryPath).then(new IAction1<Object>() {
                             public void invoke(Object o) {
                                 Log.info("OpenH264 library downloaded.");
@@ -238,6 +239,7 @@ public class App {
                 setOnSuccess(new fm.SingleAction<ConnectSuccessArgs>() {
                     public void invoke(ConnectSuccessArgs e) {
                         try {
+                            android.util.Log.w("--ICELINK LIB--","\n------- About to Bind Client, new record [App.java]...");
                             client.bind(new BindArgs(new Record("name", Serializer.serializeString(name))));
                             // Join the signalling channel.
                             ClientExtensions.joinConference(client, new JoinConferenceArgs("/" + getSessionId()) {{
@@ -262,30 +264,36 @@ public class App {
                                                 setOnReceive(new IAction1<DataChannelReceiveArgs>() {
                                                     @Override
                                                     public void invoke(DataChannelReceiveArgs dataChannelReceiveArgs) {
+                                                        android.util.Log.w("--ICELINK LIB--","\n------- About to get 'name' bounds records 1 [App.java]...");
+                                                        /*
                                                         String name = remoteClient.getBoundRecords().get("name").getValueJson();
                                                         name = name.substring(1, name.length() - 1);
-                                                        textListener.onReceivedText(name, dataChannelReceiveArgs.getDataString());
+                                                        */
+                                                        textListener.onReceivedText(ProviderName, dataChannelReceiveArgs.getDataString());
                                                     }
                                                 });
 
                                                 addOnStateChange(new IAction1<DataChannel>() {
                                                     @Override
                                                     public void invoke(DataChannel dataChannel) {
+                                                        android.util.Log.w("--ICELINK LIB--","\n------- About to get 'name' bounds records 2 [App.java]...");
+                                                        /*
                                                         String name = remoteClient.getBoundRecords().get("name").getValueJson();
                                                         name = name.substring(1, name.length() - 1);
+                                                        */
                                                         if (dataChannel.getState() == DataChannelState.Connected) {
                                                             synchronized (channelLock)
                                                             {
                                                                 dataChannels.add(dataChannel);
                                                             }
-                                                            textListener.onPeerJoined(name);
+                                                            textListener.onPeerJoined(ProviderName);
                                                         } else if (dataChannel.getState() == DataChannelState.Closed || dataChannel.getState() == DataChannelState.Failed) {
                                                             synchronized (channelLock)
                                                             {
                                                                 dataChannels.remove(dataChannel);
                                                             }
 
-                                                            textListener.onPeerLeft(name);
+                                                            textListener.onPeerLeft(ProviderName);
                                                         }
                                                     }
                                                 });
@@ -426,11 +434,13 @@ public class App {
     {
         if (localMedia.getView() == v) {
             if (localMedia.getIsRecordingAudio() != record) {
+                android.util.Log.w("--ICELINK LIB--","\n------- SET - About to toggle LOCAL Audio Recording [App.java]...");
                 localMedia.toggleAudioRecording();
             }
         } else {
             RemoteMedia remote = mediaTable.get(v);
             if (remote.getIsRecordingAudio() != record) {
+                android.util.Log.w("--ICELINK LIB--","\n------- About to toggle REMOTE Audio Recording [App.java]...");
                 remote.toggleAudioRecording();
             }
         }
@@ -439,6 +449,7 @@ public class App {
     public boolean getIsRecordingAudio(View v)
     {
         if (localMedia.getView() == v) {
+            android.util.Log.w("--ICELINK LIB--","\n------- GET - About to toggle LOCAL Audio Recording [App.java]...");
             return localMedia.getIsRecordingAudio();
         } else {
             return mediaTable.get(v).getIsRecordingAudio();
@@ -449,6 +460,7 @@ public class App {
     {
         if (localMedia.getView() == v) {
             if (localMedia.getIsRecordingVideo() != record) {
+                android.util.Log.w("--ICELINK LIB--","\n------- GET - About to toggle LOCAL Video Recording [App.java]...");
                 localMedia.toggleVideoRecording();
             }
         } else {
@@ -462,6 +474,7 @@ public class App {
     public boolean getIsRecordingVideo(View v)
     {
         if (localMedia.getView() == v) {
+            android.util.Log.w("--ICELINK LIB--","\n------- GET - About to get LOCAL Video Recording [App.java]...");
             return localMedia.getIsRecordingVideo();
         } else {
             return mediaTable.get(v).getIsRecordingVideo();

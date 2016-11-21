@@ -11,6 +11,7 @@ public class AecContext extends fm.icelink.AecContext {
     @Override
     protected AecPipe createProcessor() {
         AudioConfig config = new AudioConfig(16000, 1);
+        android.util.Log.w("--ICELINK LIB--","\n------- About to create Processor [AecContext]...");
         return new AecProcessor(config, AudioTrackSink.getBufferDelay(config) + AudioRecordSource.getBufferDelay(config));
     }
 
